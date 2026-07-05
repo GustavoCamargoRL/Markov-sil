@@ -24,21 +24,6 @@ markov-sil/
 └── README.md
 ```
 
-## O que a interface substitui do `backend.py`
-
-Tudo que estava *hardcoded* virou entrada da GUI:
-
-| Antes (no código) | Agora (na interface) |
-|---|---|
-| `LAMBDA_LIDAR`, `LAMBDA_PLC`, `LAMBDA_SDV` | painel **Parâmetros de taxa** |
-| `sif_problema_A()` (Λ montada à mão) | você **desenha** os estados e as setas |
-| `ESTADOS_SIF`, `DISPONIVEIS`, `INDISPONIVEIS` | marca o estado como **indisponível (falho)** no inspetor |
-| `P0 = [1,0,...]` | campo **P(0)** por estado |
-| chamadas de `pfd_avg`, `ti_maximo`, plots | botão **Analisar** → cartões + gráficos |
-
-Convenção da matriz (idêntica à original): uma seta *origem → destino* com taxa
-`r` faz `Λ[destino][origem] += r` e desconta `r` da diagonal da origem, de modo que
-as colunas somam zero (P'(t) = Λ P(t)).
 
 ## Como usar
 
