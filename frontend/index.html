@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Markov-SIL · projetista de SIF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <h1>Markov-SIL</h1>
+    <span class="sub">projetista de SIF · PFD · SIL</span>
+  </div>
+  <div class="spacer"></div>
+  <div id="silLive" class="sil-live"><span class="dot"></span><span>SIL <b>—</b></span></div>
+  <button class="btn ghost" id="btnExample">Exemplo A</button>
+  <button class="btn ghost" id="btnClear">Limpar</button>
+  <button class="btn primary" id="btnRun">Analisar</button>
+</header>
+
+<div class="app">
+
+  <!-- ------------------------------------------------- rail esquerda -->
+  <aside class="rail left">
+    <div class="blk">
+      <h2>Ferramenta</h2>
+      <div class="modes" id="modes">
+        <button class="mode active" data-mode="select" title="Selecionar / mover (V)">
+          <svg viewBox="0 0 24 24"><path d="M5 3l6 16 2-6 6-2z"/></svg>Selecionar</button>
+        <button class="mode" data-mode="state" title="Adicionar estado (S)">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 8v8M8 12h8"/></svg>Estado</button>
+        <button class="mode" data-mode="edge" title="Adicionar transição (T)">
+          <svg viewBox="0 0 24 24"><path d="M4 12h14M13 7l5 5-5 5"/></svg>Transição</button>
+        <button class="mode" data-mode="delete" title="Apagar (D)">
+          <svg viewBox="0 0 24 24"><path d="M5 7h14M9 7V5h6v2M7 7l1 12h8l1-12"/></svg>Apagar</button>
+      </div>
+    </div>
+
+    <div class="blk">
+      <h2>Parâmetros de taxa</h2>
+      <div class="params" id="params"></div>
+      <button class="addp" id="addParam">+ novo parâmetro</button>
+      <p class="hint" style="margin-top:8px">
+        Use estes nomes nas taxas das transições, ex.: <code>3*lD</code>,
+        <code>lP+lS</code>. Números diretos (<code>2.5e-6</code>) também valem.
+      </p>
+    </div>
+
+    <div class="blk">
+      <h2>Missão &amp; alvo</h2>
+      <div class="field">
+        <label>SIL requerido</label>
+        <select id="silAlvo" class="mono" style="width:100%;background:var(--surface-2);border:1px solid var(--line);color:var(--text);border-radius:7px;padding:7px 9px">
+          <option value="1">SIL 1</option>
+          <option value="2" selected>SIL 2</option>
+          <option value="3">SIL 3</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Tempo de missão T (h)</label>
+        <input id="tMissao" class="mono" value="8760">
+      </div>
+    </div>
+  </aside>
+
+  <!-- ------------------------------------------------- palco central -->
+  <section class="stage">
+    <svg id="svg"></svg>
+    <div class="badge-mode" id="modeBadge">modo: selecionar</div>
+    <div class="empty" id="emptyHint">
+      <svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="3"/><circle cx="18" cy="16" r="3"/><path d="M10 9l5 5"/></svg>
+      <p>Desenhe a cadeia: escolha <b>Estado</b> e clique no fundo para criar círculos;
+         em <b>Transição</b>, clique na origem e depois no destino para ligar com uma seta.</p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------- rail direita -->
+  <aside class="rail right">
+    <div class="blk insp" id="inspector">
+      <h2>Inspetor</h2>
+      <p class="none">Nada selecionado. Clique num estado ou numa transição.</p>
+    </div>
+
+    <div class="blk">
+      <h2>Resultados</h2>
+      <div class="res" id="results">
+        <p class="none" style="color:var(--text-faint);font-size:12.5px">
+          Monte a cadeia e clique <b>Analisar</b>.
+        </p>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- ------------------------------------------------- gaveta de gráficos -->
+<div class="charts" id="charts">
+  <div class="chart">
+    <div class="cap">PFD(t) — indisponibilidade instantânea</div>
+    <div id="plotPfd" class="plot"></div>
+  </div>
+  <div class="chart">
+    <div class="cap">PFDavg × T&#8202;<sub>I</sub> — faixas de SIL</div>
+    <div id="plotSweep" class="plot"></div>
+  </div>
+</div>
+
+<div class="status" id="status"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
